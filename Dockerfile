@@ -1,17 +1,19 @@
-# Use official Java runtime
+# Use Java
 FROM eclipse-temurin:21-jdk
 
-# Set working directory
 WORKDIR /app
 
-# Copy project files
+# Copy everything
 COPY . .
 
-# Build the project
+# Give permission
+RUN chmod +x mvnw
+
+# Build jar
 RUN ./mvnw clean package -DskipTests
 
 # Expose port
 EXPOSE 8080
 
-# Run the app
-CMD ["java", "-jar", "target/*.jar"]
+# Run exact jar (IMPORTANT)
+CMD ["java", "-jar", "target/cryptotrade-backend-0.0.1-SNAPSHOT.jar"]
