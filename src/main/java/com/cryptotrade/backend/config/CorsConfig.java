@@ -1,9 +1,3 @@
-// src/main/java/com/cryptotrade/config/CorsConfig.java
-// ─────────────────────────────────────────────────────────────
-// Allows the React dev server (localhost:5173) to call the backend.
-// Without this the browser blocks the request with a CORS error.
-// In production, change cors.allowed-origins to your real domain.
-// ─────────────────────────────────────────────────────────────
 package com.cryptotrade.backend.config;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -15,19 +9,24 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 public class CorsConfig {
 
-    @Value("${cors.allowed-origins}")
-    private String allowedOrigins;
+    // Supports comma-separated origins:
+    //   e.g. CORS_ALLOWED_ORIGINS=https://myapp.vercel.app,http://localhost:5173
+    @Value("${cors.allowed-origins:http://localhost:5173}")
+    private String allowedOriginsRaw;
 
     @Bean
     public WebMvcConfigurer corsConfigurer() {
+        // Split by comma so Railway can pass multiple origins in one env var
+        String[] origins = allowedOriginsRaw.split(",");
+
         return new WebMvcConfigurer() {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/api/**")
-                        .allowedOrigins(allowedOrigins)
+                        .allowedOrigins(origins)
                         .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                         .allowedHeaders("*")
-                        .allowCredentials(false); // We use Bearer tokens, not cookies
+                        .allowCredentials(false);
             }
         };
     }
