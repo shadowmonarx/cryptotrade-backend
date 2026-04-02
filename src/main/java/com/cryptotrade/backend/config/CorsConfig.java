@@ -11,7 +11,7 @@ public class CorsConfig {
 
     // Supports comma-separated origins:
     //   e.g. CORS_ALLOWED_ORIGINS=https://myapp.vercel.app,http://localhost:5173
-    @Value("${cors.allowed-origins:http://localhost:5173}")
+    @Value("${cors.allowed-origins:https://cryptobackend2-hwgxffayz-shadowmonarxs-projects.vercel.app}")
     private String allowedOriginsRaw;
 
     @Bean
